@@ -12,7 +12,7 @@ type ExpectedTokens struct {
 }
 
 func TestNextToken_CanReadBasicSymbols(t *testing.T) {
-  input := `=+(){},;`
+  input := `=+(){},;-!*/<>`
 
   expectations := []ExpectedTokens {
     {token.ASSIGN, "="},
@@ -23,6 +23,12 @@ func TestNextToken_CanReadBasicSymbols(t *testing.T) {
     {token.RBRACE, "}"},
     {token.COMMA, ","},
     {token.SEMICOLON, ";"},
+    {token.MINUS, "-"},
+    {token.BANG, "!"},
+    {token.ASTERISK, "*"},
+    {token.SLASH, "/"},
+    {token.LT, "<"},
+    {token.GT, ">"},
     {token.EOF, ""},
   }
 
@@ -30,11 +36,16 @@ func TestNextToken_CanReadBasicSymbols(t *testing.T) {
 }
 
 func TestNextToken_CanReadKeywords(t *testing.T) {
-  input := `let let`
+  input := `let fn true false if else return`
 
   expectations := []ExpectedTokens {
     {token.LET, "let"},
-    {token.LET, "let"},
+    {token.FUNCTION, "fn"},
+    {token.TRUE, "true"},
+    {token.FALSE, "false"},
+    {token.IF, "if"},
+    {token.ELSE, "else"},
+    {token.RETURN, "return"},
   }
 
   testTokens(t, input, expectations)

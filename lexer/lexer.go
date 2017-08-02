@@ -56,6 +56,18 @@ func (l *Lexer) NextToken() token.Token {
     return newToken(token.COMMA, l.readChar())
   case ';':
     return newToken(token.SEMICOLON, l.readChar())
+  case '-':
+    return newToken(token.MINUS, l.readChar())
+  case '!':
+    return newToken(token.BANG, l.readChar())
+  case '*':
+    return newToken(token.ASTERISK, l.readChar())
+  case '/':
+    return newToken(token.SLASH, l.readChar())
+  case '<':
+    return newToken(token.LT, l.readChar())
+  case '>':
+    return newToken(token.GT, l.readChar())
   case 0:
     return token.Token{Type: token.EOF, Literal: ""}
   default:
@@ -101,6 +113,7 @@ func (l *Lexer) readIdentifier() string {
 func (l *Lexer) readNumber() string {
   return l.readCharGroup(isDigit)
 }
+
 func isLetter(ch byte) bool {
   return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
