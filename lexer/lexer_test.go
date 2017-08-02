@@ -84,6 +84,16 @@ func TestNextToken_CanReadNumbers(t *testing.T) {
   testTokens(t, input, expectations)
 }
 
+func TestNextToken_CanReadMultiCharacterOperators(t *testing.T) {
+  input := `== !=`
+
+  expectations := []ExpectedTokens {
+    {token.EQ, "=="},
+    {token.NOT_EQ, "!="},
+  }
+
+  testTokens(t, input, expectations)
+}
 func testTokens(t *testing.T, input string, tests []ExpectedTokens) {
   l := NewLexer(input)
 
