@@ -60,6 +60,10 @@ func (l *Lexer) NextToken() token.Token {
     return newToken(token.LBRACE, l.readChar())
   case '}':
     return newToken(token.RBRACE, l.readChar())
+  case '\'':
+    return newToken(token.SINGLE_QUOTE, l.readChar())
+  case '"':
+    return newToken(token.QUOTE, l.readChar())
   case ',':
     return newToken(token.COMMA, l.readChar())
   case ';':

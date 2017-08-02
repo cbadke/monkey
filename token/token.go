@@ -30,6 +30,9 @@ const (
   NOT_EQ = "!="
 
   // Delimiters
+  QUOTE        = "\""
+  SINGLE_QUOTE = "'"
+
   COMMA     = ","
   SEMICOLON = ";"
 
