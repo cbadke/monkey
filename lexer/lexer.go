@@ -5,23 +5,27 @@ import "monkey/token"
 type Lexer struct {
   input        string
   peekPosition int
+  lineCount    int
+  filename     string
 }
 
-func NewLexer(input string) *Lexer {
-  l := &Lexer{input: input}
+func NewLexer(input string, filename string) *Lexer {
+  l := &Lexer{input: input, filename: filename, lineCount: 1}
   return l
 }
 
-func (l *Lexer) readChar() byte {
+func (l *Lexer) readChar() (byte, int, int) {
   var ch byte
+  position := l.peekPosition
 
   if l.peekPosition >= len(l.input) {
     ch = 0
   } else {
     ch = l.input[l.peekPosition]
+    l.peekPosition += 1
   }
-  l.peekPosition += 1
-  return ch
+
+  return ch, position, l.lineCount
 }
 
 func (l *Lexer) peekChar() byte {
@@ -41,17 +45,17 @@ func (l *Lexer) NextToken() token.Token {
 
   switch l.peekChar() {
   case '=':
-    firstChar := l.readChar()
-
+    firstChar, position, line := l.readChar()
     if l.peekChar() == '=' {
-      secondChar := l.readChar()
+      secondChar, _, _ := l.readChar()
       literal := string(firstChar) + string(secondChar)
-      return token.Token{Type: token.EQ, Literal: literal}
+      return token.Token{Type: token.EQ, Literal: literal, Filename: l.filename, Line: line, Character: position}
     } else {
-      return newToken(token.ASSIGN, firstChar)
+      return newToken(token.ASSIGN, firstChar, position, line)
     }
   case '+':
-    return newToken(token.PLUS, l.readChar())
+    char, line, position := readChar()
+    return newToken(token.PLUS, char, p)
   case '(':
     return newToken(token.LPAREN, l.readChar())
   case ')':
@@ -103,8 +107,8 @@ func (l *Lexer) NextToken() token.Token {
   }
 }
 
-func newToken(tokenType token.TokenType, ch byte) token.Token {
-  return token.Token{Type: tokenType, Literal: string(ch)}
+func newToken(tokenType token.TokenType, ch byte, pos int, line int) token.Token {
+  return token.Token{Type: tokenType, Literal: string(ch), Filename: l.filename, Line: line, Character: pos}
 }
 
 func (l *Lexer) skipWhitespace() {
