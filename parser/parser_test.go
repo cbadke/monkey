@@ -17,7 +17,7 @@ let foobar = 828282;
   p := New(l)
 
   program := p.ParseProgram()
-
+  checkParserErrors(t,p)
 
   if program == nil {
     t.Fatalf("ParseProgram() return nil")
@@ -25,8 +25,6 @@ let foobar = 828282;
   if len(program.Statements) != 3 {
     t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
   }
-
-  checkParserErrors(t,p)
 
   tests := []struct {
     expectedIdentifier string
@@ -80,4 +78,35 @@ func checkParserErrors(t *testing.T, p *Parser) {
     t.Errorf("parser error: %q", msg)
   }
   t.FailNow()
+}
+
+
+func TestReturnStatement(t *testing.T) {
+  input := `
+return 5;
+return 10;
+return 993322;
+`
+
+  l := lexer.NewLexer(input, "returnTest")
+  p := New(l)
+
+  program := p.ParseProgram()
+  checkParserErrors(t, p)
+
+  if len(program.Statements) != 3 {
+    t.Fatalf("program.Statements does not contain 3 statements. got=%d", len(program.Statements))
+  }
+
+  for _, stmt := range program.Statements {
+    returnStmt, ok := stmt.(*ast.ReturnStatement)
+
+    if !ok {
+      t.Errorf("stmt not *ast.returnStatment. got=%T", stmt)
+      continue
+    }
+    if returnStmt.TokenLiteral() != "return" {
+      t.Errorf("returnStmt.TokenLiteral not 'return', got %q", returnStmt.TokenLiteral())
+    }
+  }
 }
