@@ -26,7 +26,7 @@ func (l *Lexer) readChar() (byte, int, int) {
     l.charCount += 1
   }
 
-  return ch, l.charCount-1, l.lineCount
+  return ch, l.charCount, l.lineCount
 }
 
 func (l *Lexer) peekChar() byte {
